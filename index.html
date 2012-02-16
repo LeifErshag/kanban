@@ -1,0 +1,97 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+<script>
+
+$( init );
+ 
+function init() {
+//  $('.makeMeDraggable').draggable()
+}
+
+var counter = 0;
+
+
+function createTodoWith(text, leftpx, toppx)
+{
+
+	$("<div />", {
+		"class" : "makeMeDraggable",
+		"id" : ++counter
+	})
+	.css(
+		{
+			"position" : "absolute",
+			"top" : toppx,
+			"left" : leftpx
+		}
+	)
+	.draggable()
+	.appendTo(document.body);
+	$("#" + counter).text(text);
+}
+
+function createNewTodo()
+{
+	var todotext = $("#newTodo").val();
+	createTodoWith(todotext, 150, 150+(counter*10));
+}
+
+function save()
+{
+	$(".makeMeDraggable").each(function (index, draggable) {
+		var that = $(draggable);
+		var obj = {
+			text : that.text(),
+			leftpx : that.css("left"),
+			toppx : that.css("top")
+		};
+		alert("knas");
+		localStorage.setItem(that.attr("id"), JSON.stringify(obj));
+	});
+}
+
+function load()
+{
+	for (var i=0; i<localStorage.length; i++) {
+		var obj = JSON.parse(localStorage.getItem(localStorage.key(i)));
+		createTodoWith(obj.text, obj.leftpx, obj.toppx);
+	}
+}
+ 
+
+</script>
+<style>
+
+.postitarea {
+	width: 250px;
+	height: 700px;
+	background-color: #999999;
+	display: inline-block;
+}
+
+.makeMeDraggable {
+	width: 200px;
+	height: 150px;
+	background-color: #ffff00;
+	position: absolute;
+}
+
+</style>
+<title>Uppgift 2 - Valfri ramverkslösning</title>
+</head>
+<body onload="load();" onunload="save();">
+<input type="text" id="newTodo" /><input type="button" value="Add new" onclick="createNewTodo();" />
+<div class="postitarea" id="todo">
+<p>To do</p>
+</div>
+<div class="postitarea" id="doing">
+<p>Doing</p>
+</div>
+<div class="postitarea" id="done">
+<p>Done</p>
+</div>
+</body>
+</html>
